@@ -1,6 +1,7 @@
 ﻿using LoanCalcMVC.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using LoanCalcMVC.Helpers;
 
 namespace LoanCalcMVC.Controllers
 {
@@ -21,6 +22,34 @@ namespace LoanCalcMVC.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public IActionResult App()
+        {
+
+            Loan loan = new();
+            loan.Payment = 0.0m;
+            loan.TotalInterest = 0.0m;
+            loan.TotalCost = 0.0m;
+            loan.Rate = 3.5m;
+            loan.Amount = 15000m;
+            loan.Term = 60;
+
+
+            return View(loan);
+        }
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public IActionResult App(Loan loan)
+        {
+            //calculate loan and get the payments//
+
+            var loanHelper = new LoanHelper();
+
+            Loan newloan = loanHelper.GetPayments(loan);
+
+
+            return View(newloan);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
